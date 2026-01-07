@@ -1,0 +1,17 @@
+node_modules/
+dist/*.map
+src/
+test/
+tests/
+*.log
+.vscode/
+webpack.config.js
+vite.config.ts
+tsconfig.json
+*.md
+.git/
+.gitignore
+.npmignore
+
+index.html
+src/example.ts

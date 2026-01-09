@@ -6,8 +6,8 @@ on:
   #     - main
   workflow_dispatch: # Allow manual trigger
 
-  jobs:
-  publish:
+jobs:
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:

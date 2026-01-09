@@ -1,4 +1,4 @@
-import { Chip8 } from "../dist/chip8.js";
+import { Chip8 } from "./chip8.js";
 
 // Create Chip8 instance
 const chip8 = new Chip8();

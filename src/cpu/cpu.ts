@@ -13,7 +13,7 @@ export class CPU {
    * @param ctx The execution context (memory, registers, I/O)
    * @returns Number of instructions executed (1 per tick)
    */
-  tick(ctx: ExecutionContext): number {
+  public tick(ctx: ExecutionContext): number {
     if (this.registers.paused) return 0;
 
     // Fetch opcode (2 bytes)
@@ -47,7 +47,7 @@ export class CPU {
   /**
    * Reset CPU registers
    */
-  reset(): void {
+  public reset(): void {
     this.registers.reset();
   }
 }

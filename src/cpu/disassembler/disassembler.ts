@@ -9,7 +9,7 @@ export class Disassembler {
    * @param opcode 16-bit opcode
    * @returns { instruction: Instruction | null, args: number[] }
    */
-  disassemble(opcode: number): { instruction: any | null; args: number[] } {
+  public disassemble(opcode: number): { instruction: any | null; args: number[] } {
     try {
       // Find the instruction that matches the given opcode
       const instruction = INSTRUCTION_SET.find(

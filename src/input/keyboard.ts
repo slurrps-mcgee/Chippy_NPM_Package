@@ -1,12 +1,14 @@
 // keyboard.ts
-import { KEYMAP, NUMBER_OF_KEYS } from "@/constants/keymap.constants";
+import { DigitalKeyMapping, KEYMAP, NUMBER_OF_KEYS } from "@/constants/keymap.constants";
 
 export class Keyboard {
   /** Array of pressed keys */
-  keyPressed: boolean[] = new Array(NUMBER_OF_KEYS).fill(false);
-
+  public keyPressed: boolean[] = new Array(NUMBER_OF_KEYS).fill(false);
   /** Callback for waiting for next key press */
   onNextKeyPress: ((key: number) => void) | null = null;
+
+  /** Digital key mapping */
+  public readonly DigitalKeyMapping = DigitalKeyMapping;
 
   constructor() {
     // Listen to actual keyboard events
@@ -15,7 +17,7 @@ export class Keyboard {
   }
 
   /** Checks if a key is pressed */
-  isKeyPressed(keyCode: number): boolean {
+  public isKeyPressed(keyCode: number): boolean {
     return this.keyPressed[keyCode] || false;
   }
 
@@ -40,18 +42,20 @@ export class Keyboard {
     }
   }
 
-  /** Manually trigger a key press (useful for virtual or headless input) */
-  triggerKeyDown(keyCode: number) {
-    this.keyPressed[keyCode] = true;
-  }
+  /** Manually trigger a key*/
+  public triggerKeyEvent(keyCode: number, eventType: string) {
+    const event = new KeyboardEvent(eventType, { 
+      key: keyCode.toString(),
+      keyCode: keyCode,
+      charCode: 0,
+      bubbles: true
+    });
 
-  /** Manually trigger a key release (useful for virtual or headless input) */
-  triggerKeyUp(keyCode: number) {
-    this.keyPressed[keyCode] = false;
-
-    if (this.onNextKeyPress) {
-      this.onNextKeyPress(keyCode);
-      this.onNextKeyPress = null;
+    if (eventType == "keydown") {
+      this.onKeyDown(event);
+    }
+    else {
+      this.onKeyUp(event);
     }
   }
 

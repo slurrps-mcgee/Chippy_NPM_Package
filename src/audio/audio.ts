@@ -72,10 +72,16 @@ export class Audio {
     }
   }
 
+  // Properties to customize sound
   /** Set oscillator wave type */
   setWave(type: OscillatorType): void {
     this.wave = type;
     if (this.oscillator) this.oscillator.type = type;
+  }
+
+  /** Get current volume level */
+  getVolume(): number {
+    return this.volumeLevel;
   }
 
   /** Set master volume */

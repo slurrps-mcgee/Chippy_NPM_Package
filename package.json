@@ -3,7 +3,7 @@
   "author": "Slurrps",
   "license": "MIT",
   "private": false,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "main": "./dist/chip8.js",
   "types": "./dist/chip8.d.ts",

@@ -4,31 +4,29 @@ import { LOAD_PROGRAM_ADDRESS } from "@/constants/memory.constants";
 
 export class Registers {
   // General-purpose registers V0-VF
-  V: Uint8Array = new Uint8Array(NUMBER_OF_REGISTERS);
+  public V: Uint8Array = new Uint8Array(NUMBER_OF_REGISTERS);
 
   // Memory address register
-  I: number = 0;
+  public I: number = 0;
 
   // Stack
-  stack: Uint16Array = new Uint16Array(STACK_DEEP);
-  SP: number = -1; // Stack pointer
-
+  public stack: Uint16Array = new Uint16Array(STACK_DEEP);
+  public SP: number = -1; // Stack pointer
   // Program Counter
-  PC: number = LOAD_PROGRAM_ADDRESS;
+  public PC: number = LOAD_PROGRAM_ADDRESS;
 
   // Timers
-  DT: number = 0; // Delay Timer
-  ST: number = 0; // Sound Timer
-
+  public DT: number = 0; // Delay Timer
+  public ST: number = 0; // Sound Timer
   // Pause flag (for waiting for keypress)
-  paused: boolean = false;
+  public paused: boolean = false;
 
   constructor() {
     this.reset();
   }
 
   /** Reset all registers, stack, PC, timers, and pause flag */
-  reset(): void {
+  public reset(): void {
     this.V.fill(0);
     this.I = 0;
     this.stack.fill(0);
@@ -40,13 +38,13 @@ export class Registers {
   }
 
   /** Increment program counter to next instruction (2 bytes per CHIP-8 instruction) */
-  nextInstruction(): void {
+  public nextInstruction(): void {
     this.PC += 2;
     console.log(`[PC] nextInstruction: PC=0x${this.PC.toString(16)}`);
   }
 
   /** Push value onto stack */
-  stackPush(value: number): void {
+  public stackPush(value: number): void {
     if (this.SP >= STACK_DEEP - 1) {
       throw new Error("Stack Overflow: Attempted to push beyond stack depth.");
     }
@@ -56,7 +54,7 @@ export class Registers {
   }
 
   /** Pop value from stack */
-  stackPop(): number {
+  public stackPop(): number {
     if (this.SP < 0) {
       throw new Error("Stack Underflow: Attempted to pop from an empty stack.");
     }
@@ -70,7 +68,7 @@ export class Registers {
    * Update timers (called each cycle at ~60Hz)
    * Decrements DT and ST, returns true if ST reached 0 (useful for beeps)
    */
-  updateTimers(): boolean {
+  public updateTimers(): boolean {
     if (this.DT > 0) this.DT--;
     if (this.ST > 0) {
       this.ST--;

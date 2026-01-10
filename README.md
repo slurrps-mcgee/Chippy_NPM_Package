@@ -1,2 +1,6 @@
 # Chippy_NPM_Package
-a decoupled npm package that can be used to seetup a chip8 emulator on any web project
+
+Chippy is a Chip8 emulator written in typescript with no dependencies
+
+implementation can be seen in the index.html file and example.ts file inside the repo.
+

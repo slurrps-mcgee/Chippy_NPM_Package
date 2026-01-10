@@ -17,19 +17,19 @@ const romInput = document.getElementById("romLoader") as HTMLInputElement;
 romInput.addEventListener("change", async () => {
     if (!romInput.files) return;
     const romBuffer = new Uint8Array(await romInput.files[0].arrayBuffer());
-    // Customize Settings
+    // Customize Display colors
     chip8.display.setBackgroundColor('#282828');
     chip8.display.setForegroundColor('#FFB000');
-    
+
     // Load the ROM into the emulator
     chip8.loadRom(romBuffer);
     // Enable sound
     chip8.speaker.enableSound();
 
-    
-
+    // Setup settings
     setupVirtualKeyboard(chip8);
     setupVolumeControl(chip8);
+    setupSoundToggle(chip8);
 
     // Hook frame rendering from Chip8
     chip8.onFrameFinished((frameBuffer: any) => {
@@ -50,6 +50,18 @@ function setupVolumeControl(chip8: Chip8) {
     volumeSlider.addEventListener("input", () => {
         const volume = parseFloat(volumeSlider.value);
         chip8.speaker.setVolume(volume);
+    });
+}
+
+function setupSoundToggle(chip8: Chip8) {
+    const soundToggle = document.getElementById("muteCheckbox") as HTMLInputElement;
+
+    soundToggle.addEventListener("change", () => {
+        if (soundToggle.checked) {
+            chip8.speaker.mute();
+        } else {
+            chip8.speaker.unMute();
+        }
     });
 }
 

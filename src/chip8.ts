@@ -27,7 +27,7 @@ export class Chip8 {
     // Initialize Chip8 system
     constructor() {
         // Initialize components
-        this.display = new Display(10); // Set scale to 10 configure later
+        this.display = new Display(); // Set scale to 10 configure later
         this.keyboard = new Keyboard();
         this.speaker = new Audio();
         this.cpu = new CPU();
@@ -42,6 +42,7 @@ export class Chip8 {
             decrementTimers: () => this.cpu.registers.updateTimers(),
 
         };
+        
     }
 
     /** Starts the main emulator loop */
@@ -54,8 +55,8 @@ export class Chip8 {
     loadRom(romBuffer: Uint8Array) {
         // Reset system state
         this.ctx.memory.reset();
+        this.cpu.reset();
         this.display.clear();
-        this.cpu.registers.reset();
 
         // Load ROM into memory
         memory.loadROM(romBuffer);

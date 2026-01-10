@@ -54,6 +54,7 @@ export class Memory {
     }
 
     this.memory.set(buffer, LOAD_PROGRAM_ADDRESS);
+
     this.romLength = buffer.length;
   }
 

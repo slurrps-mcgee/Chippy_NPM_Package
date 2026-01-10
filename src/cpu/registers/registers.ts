@@ -40,7 +40,6 @@ export class Registers {
   /** Increment program counter to next instruction (2 bytes per CHIP-8 instruction) */
   public nextInstruction(): void {
     this.PC += 2;
-    console.log(`[PC] nextInstruction: PC=0x${this.PC.toString(16)}`);
   }
 
   /** Push value onto stack */
@@ -50,7 +49,6 @@ export class Registers {
     }
     this.SP++;
     this.stack[this.SP] = value;
-    console.log(`[STACK] PUSH: SP=${this.SP}, value=0x${value.toString(16)}`);
   }
 
   /** Pop value from stack */
@@ -60,7 +58,6 @@ export class Registers {
     }
     const value = this.stack[this.SP];
     this.SP--;
-    console.log(`[STACK] POP: SP=${this.SP}, value=0x${value.toString(16)}`);
     return value;
   }
 

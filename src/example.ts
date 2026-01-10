@@ -6,8 +6,8 @@ const chip8 = new Chip8();
 // Grab the canvas from the HTML
 const canvas = document.getElementById("screen") as HTMLCanvasElement;
 // Set canvas size based on display scale
-canvas.width = chip8.display.width * chip8.display.scale;
-canvas.height = chip8.display.height * chip8.display.scale;
+canvas.width = chip8.display.width;
+canvas.height = chip8.display.height;
 
 const ctx = canvas.getContext("2d")!;
 ctx.imageSmoothingEnabled = false;
@@ -17,14 +17,16 @@ const romInput = document.getElementById("romLoader") as HTMLInputElement;
 romInput.addEventListener("change", async () => {
     if (!romInput.files) return;
     const romBuffer = new Uint8Array(await romInput.files[0].arrayBuffer());
+    // Customize Settings
+    chip8.display.setBackgroundColor('#282828');
+    chip8.display.setForegroundColor('#FFB000');
+    
     // Load the ROM into the emulator
     chip8.loadRom(romBuffer);
     // Enable sound
     chip8.speaker.enableSound();
 
-    // Customize Settings
-    chip8.display.setBackgroundColor('#282828');
-    chip8.display.setForegroundColor('#FFB000');
+    
 
     setupVirtualKeyboard(chip8);
     setupVolumeControl(chip8);

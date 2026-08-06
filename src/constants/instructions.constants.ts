@@ -396,15 +396,167 @@ export const INSTRUCTION_SET = [
     arguments: [MASK_X],
   },
 
-  //Chip48 Instructions
+  // --- SUPER-CHIP 1.1 ---
+
+  // 00CN - Scroll display N pixels down (N/2 in low-res)
   {
     key: 36,
-    id: 'SCD nibble',
+    id: 'SCD',
     name: 'SCD',
-    mask: MASK_N,
-    pattern: 0x00C0,
-    arguments: [],
-  }
-];
+    mask: 0xfff0,
+    pattern: 0x00c0,
+    arguments: [MASK_N],
+  },
 
-//TODO: Add Super chip8 instructions
+  // 00FB - Scroll right 4 (2 in low-res)
+  {
+    key: 37,
+    id: 'SCR',
+    name: 'SCR',
+    mask: 0xffff,
+    pattern: 0x00fb,
+    arguments: [],
+  },
+
+  // 00FC - Scroll left 4 (2 in low-res)
+  {
+    key: 38,
+    id: 'SCL',
+    name: 'SCL',
+    mask: 0xffff,
+    pattern: 0x00fc,
+    arguments: [],
+  },
+
+  // 00FD - Exit interpreter
+  {
+    key: 39,
+    id: 'EXIT',
+    name: 'EXIT',
+    mask: 0xffff,
+    pattern: 0x00fd,
+    arguments: [],
+  },
+
+  // 00FE - Disable extended screen (64×32)
+  {
+    key: 40,
+    id: 'LOW',
+    name: 'LOW',
+    mask: 0xffff,
+    pattern: 0x00fe,
+    arguments: [],
+  },
+
+  // 00FF - Enable extended screen (128×64)
+  {
+    key: 41,
+    id: 'HIGH',
+    name: 'HIGH',
+    mask: 0xffff,
+    pattern: 0x00ff,
+    arguments: [],
+  },
+
+  // FX30 - Point I to 10-byte large font for digit VX (0–9)
+  {
+    key: 42,
+    id: 'LD_HF_VX',
+    name: 'LD',
+    mask: 0xf0ff,
+    pattern: 0xf030,
+    arguments: [MASK_X],
+  },
+
+  // FX75 - Store V0..VX in RPL flags (X ≤ 7)
+  {
+    key: 43,
+    id: 'LD_R_VX',
+    name: 'LD',
+    mask: 0xf0ff,
+    pattern: 0xf075,
+    arguments: [MASK_X],
+  },
+
+  // FX85 - Read V0..VX from RPL flags (X ≤ 7)
+  {
+    key: 44,
+    id: 'LD_VX_R',
+    name: 'LD',
+    mask: 0xf0ff,
+    pattern: 0xf085,
+    arguments: [MASK_X],
+  },
+
+  // --- XO-CHIP ---
+
+  // 00DN - Scroll display N pixels up
+  {
+    key: 45,
+    id: 'SCU',
+    name: 'SCU',
+    mask: 0xfff0,
+    pattern: 0x00d0,
+    arguments: [MASK_N],
+  },
+
+  // 5XY2 - Save Vx..Vy to memory at I (no I increment)
+  {
+    key: 46,
+    id: 'LD_I_VX_VY',
+    name: 'LD',
+    mask: MASK_HIGHEST_AND_LOWEST_BYTE,
+    pattern: 0x5002,
+    arguments: [MASK_X, MASK_Y],
+  },
+
+  // 5XY3 - Load Vx..Vy from memory at I (no I increment)
+  {
+    key: 47,
+    id: 'LD_VX_VY_I',
+    name: 'LD',
+    mask: MASK_HIGHEST_AND_LOWEST_BYTE,
+    pattern: 0x5003,
+    arguments: [MASK_X, MASK_Y],
+  },
+
+  // F000 - Start of double-wide i := long NNNN (handled specially in CPU)
+  {
+    key: 48,
+    id: 'LD_I_LONG',
+    name: 'LD',
+    mask: 0xffff,
+    pattern: 0xf000,
+    arguments: [],
+  },
+
+  // FN01 - Select drawing plane bitmask
+  {
+    key: 49,
+    id: 'PLANE',
+    name: 'PLANE',
+    mask: 0xf0ff,
+    pattern: 0xf001,
+    arguments: [MASK_X],
+  },
+
+  // F002 - Load audio pattern buffer from I
+  {
+    key: 50,
+    id: 'AUDIO',
+    name: 'AUDIO',
+    mask: 0xffff,
+    pattern: 0xf002,
+    arguments: [],
+  },
+
+  // FX3A - Set pitch from VX
+  {
+    key: 51,
+    id: 'PITCH_VX',
+    name: 'LD',
+    mask: 0xf0ff,
+    pattern: 0xf03a,
+    arguments: [MASK_X],
+  },
+];

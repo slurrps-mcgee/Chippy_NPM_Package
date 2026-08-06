@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'url';
 import { dirname, resolve as _resolve } from 'path';
+import { copyFileSync, mkdirSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,13 +12,13 @@ export default {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: [/node_modules/, /.spec.ts/],
-      },
-      {
-        test: [/\.node.js$/],
-        include: [_resolve(__dirname, './src')],
-        use: 'raw-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            configFile: 'tsconfig.build.json',
+          },
+        },
+        exclude: [/node_modules/, /\.spec\.ts$/, /example\.ts$/],
       },
     ],
   },
@@ -26,7 +27,7 @@ export default {
   },
   resolve: {
     alias: {
-      '@': _resolve(__dirname, 'src')
+      '@': _resolve(__dirname, 'src'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
@@ -36,6 +37,19 @@ export default {
     clean: true,
     library: {
       type: 'module',
-    }
+    },
   },
+  plugins: [
+    {
+      apply(compiler) {
+        compiler.hooks.afterEmit.tap('CopyTypesPlugin', () => {
+          mkdirSync(_resolve(__dirname, 'dist'), { recursive: true });
+          copyFileSync(
+            _resolve(__dirname, 'types/chippy.d.ts'),
+            _resolve(__dirname, 'dist/chip8.d.ts')
+          );
+        });
+      },
+    },
+  ],
 };

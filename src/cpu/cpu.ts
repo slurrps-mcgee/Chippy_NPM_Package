@@ -1,4 +1,3 @@
-// cpu/cpu.ts
 import { Registers } from "@/cpu/registers/registers";
 import { Disassembler } from "@/cpu/disassembler/disassembler";
 import { OPERATIONS } from "@/cpu/operations/operations";
@@ -9,27 +8,28 @@ export class CPU {
   private disassembler = new Disassembler();
 
   /**
-   * Execute one CPU tick (instruction cycle)
-   * @param ctx The execution context (memory, registers, I/O)
-   * @returns Number of instructions executed (1 per tick)
+   * Execute one CPU tick (instruction cycle).
+   * Handles XO-CHIP double-wide `F000 NNNN` (i := long).
    */
   public tick(ctx: ExecutionContext): number {
     if (this.registers.paused) return 0;
 
-    // Fetch opcode (2 bytes)
     const opcode = ctx.memory.readOpcode(this.registers.PC);
-
-    // Move to next instruction by default
     this.registers.nextInstruction();
 
-    // Disassemble
+    // XO-CHIP: i := long NNNN — consume the following word as a 16-bit immediate
+    if (opcode === 0xf000) {
+      this.registers.I = ctx.memory.readOpcode(this.registers.PC) & 0xffff;
+      this.registers.nextInstruction();
+      return 1;
+    }
+
     const { instruction, args } = this.disassembler.disassemble(opcode);
     if (!instruction) {
       console.error(`Invalid opcode 0x${opcode.toString(16)}`);
       return 0;
     }
 
-    // Execute
     const operation = OPERATIONS[instruction.id];
     if (!operation) {
       console.error(`Unimplemented instruction: ${instruction.id}`);
@@ -37,16 +37,15 @@ export class CPU {
     }
 
     operation(ctx, args, opcode);
-
-    // Update timers via context
-    ctx.decrementTimers();
-
-    return 1; // 1 instruction executed
+    this.registers.I &= 0xffff;
+    this.registers.PC &= 0xffff;
+    return 1;
   }
 
-  /**
-   * Reset CPU registers
-   */
+  public disassemble(opcode: number) {
+    return this.disassembler.disassemble(opcode);
+  }
+
   public reset(): void {
     this.registers.reset();
   }

@@ -3,142 +3,347 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Chip8 Emulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chippy — Chip-8 Emulator</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
   <style>
+    :root {
+      --chippy-bg: #1a1a1a;
+      --chippy-panel: #242424;
+      --chippy-border: #3a3a3a;
+      --chippy-accent: #ffb000;
+      --chippy-text: #e8e8e8;
+      --chippy-muted: #9a9a9a;
+      --chippy-mono: "SF Mono", "Cascadia Code", "Consolas", monospace;
+    }
+
     body {
-      background-color: #222;
-      color: #eee;
-      font-family: sans-serif;
+      background: var(--chippy-bg);
+      color: var(--chippy-text);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      min-height: 100vh;
     }
 
-    canvas {
+    h1 {
+      color: var(--chippy-accent);
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .panel {
+      background: var(--chippy-panel);
+      border: 1px solid var(--chippy-border);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .panel h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--chippy-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    canvas#screen {
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 2 / 1;
+      height: auto;
       image-rendering: pixelated;
-      margin-top: 20px;
-      border: 2px solid #eee;
+      image-rendering: crisp-edges;
+      border: 2px solid var(--chippy-accent);
+      background: #000;
+      display: block;
+      margin: 0 auto;
     }
 
-    input {
-      margin-top: 10px;
+    .btn-accent {
+      background: var(--chippy-accent);
+      border-color: var(--chippy-accent);
+      color: #111;
+      font-weight: 600;
     }
 
-    canvas {
-      width: 640px;
-      /* scale ×10 */
-      height: 320px;
-      image-rendering: pixelated;
-      margin-top: 20px;
-      border: 2px solid #eee;
+    .btn-accent:hover {
+      background: #e09a00;
+      border-color: #e09a00;
+      color: #111;
     }
 
-    input {
-      margin-top: 10px;
+    .btn-outline-light.active-key {
+      background: var(--chippy-accent);
+      border-color: var(--chippy-accent);
+      color: #111;
     }
 
-    .btn-dark {
-      background-color: #FFB000;
+    #keypad .btn {
+      min-width: 3rem;
+      font-family: var(--chippy-mono);
+    }
+
+    .mono,
+    #registerView,
+    #stackView,
+    #disasmView,
+    #memoryView,
+    #fpsView,
+    #statusView,
+    #opcodeView {
+      font-family: var(--chippy-mono);
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.45;
+      max-width: 100%;
+    }
+
+    #registerView {
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    #memoryView {
+      max-height: 220px;
+      overflow: auto;
+      white-space: pre;
+      background: #111;
+      border: 1px solid var(--chippy-border);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .color-field {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .color-field .form-label {
+      min-height: 1.25rem;
+    }
+
+    .color-field .btn {
+      height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .legend {
+      font-size: 0.8rem;
+      color: var(--chippy-muted);
+    }
+
+    label.form-label {
+      font-size: 0.85rem;
+      color: var(--chippy-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid var(--chippy-border);
+      background: transparent;
+    }
+
+    .form-range {
+      accent-color: var(--chippy-accent);
+    }
+
+    .transport .btn {
+      min-width: 4.5rem;
+    }
+
+    .row > [class*="col-"] {
+      min-width: 0;
     }
   </style>
 </head>
 
 <body>
-  <section class="container d-flex flex-column align-items-center justify-content-center">
-    <h1>Chip8 Emulator</h1>
-    <canvas id="screen" width="64" height="32"></canvas>
-    <input type="file" id="romLoader" accept=".ch8,.rom" />
-  </section>
-
-  <br>
-
-  <!--Sound slider-->
-  <section class="container">
-    <div class="d-flex justify-content-center gap-1">
-      <input class="form-check-input" type="checkbox" value="" id="muteCheckbox">
-      <label class="form-check-label" for="muteCheckbox">Mute</label>
+  <div class="container py-4">
+    <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
+      <h1 class="mb-0">Chippy</h1>
+      <span class="legend">Chip-8 emulator · load a <code>.ch8</code> / <code>.rom</code> to start</span>
     </div>
-    <div class="d-flex flex-column align-items-center justify-content-center">
-      <label for="volumeSlider">Volume:</label>
-      <input type="range" id="volumeSlider" min="0" max="1" step="0.01">
-    </div>
-  </section>
 
-  <br>
-  <!--Virtual keypad for mobile should be placed here-->
-  <section>
-    <div class="container">
-      <div id="keypad">
-        <div class="row row-cols-4 g-2 justify-content-center">
-          <!-- Row 1 -->
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key1">1</button>
-          </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key2">2</button>
-          </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key3">3</button>
-          </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="keyC">C</button>
-          </div>
+    <div class="row g-3">
+      <!-- Left: display + transport + input -->
+      <div class="col-lg-7">
+        <div class="panel">
+          <h2>Display</h2>
+          <canvas id="screen" width="64" height="32"></canvas>
         </div>
 
-        <div class="row row-cols-4 g-2 justify-content-center">
-          <!-- Row 2 -->
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key4">4</button>
+        <div class="panel">
+          <h2>ROM &amp; Transport</h2>
+          <div class="mb-3">
+            <input type="file" id="romLoader" class="form-control form-control-sm" accept=".ch8,.rom">
           </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key5">5</button>
+          <div class="transport d-flex flex-wrap gap-2 mb-3">
+            <button type="button" class="btn btn-sm btn-accent" id="btnRun">Run</button>
+            <button type="button" class="btn btn-sm btn-outline-light" id="btnPause">Pause</button>
+            <button type="button" class="btn btn-sm btn-outline-light" id="btnResume">Resume</button>
+            <button type="button" class="btn btn-sm btn-outline-light" id="btnStop">Stop</button>
+            <button type="button" class="btn btn-sm btn-outline-light" id="btnStep">Step</button>
+            <button type="button" class="btn btn-sm btn-outline-light" id="btnReset">Reset</button>
           </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key6">6</button>
+          <div class="row g-2 align-items-end">
+            <div class="col-md-8">
+              <label class="form-label" for="speedSlider">Speed (IPS): <span id="speedLabel">700</span></label>
+              <input type="range" class="form-range" id="speedSlider" min="60" max="2000" step="10" value="700">
+            </div>
+            <div class="col-md-4">
+              <div class="legend" id="statusView">idle</div>
+              <div class="mono" id="fpsView">FPS: —</div>
+            </div>
           </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="keyD">D</button>
+          <div class="d-flex flex-wrap gap-3 mt-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="legacyScrollCheckbox">
+              <label class="form-check-label legend" for="legacyScrollCheckbox">Legacy SCHIP lores half-pixel scroll</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="spriteWrapCheckbox">
+              <label class="form-check-label legend" for="spriteWrapCheckbox">VIP sprite wrap (lores)</label>
+            </div>
           </div>
         </div>
-        <div class="row row-cols-4 g-2 justify-content-center">
-          <!-- Row 3 -->
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key7">7</button>
-          </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key8">8</button>
-          </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key9">9</button>
-          </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="keyE">E</button>
+
+        <div class="panel">
+          <h2>Display Colors (XO planes)</h2>
+          <div class="row g-2 align-items-stretch">
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="color-field">
+                <label class="form-label" for="bgColor">Background</label>
+                <input type="color" id="bgColor" value="#282828">
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="color-field">
+                <label class="form-label" for="plane0Color">Plane 1</label>
+                <input type="color" id="plane0Color" value="#ffb000">
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="color-field">
+                <label class="form-label" for="plane1Color">Plane 2</label>
+                <input type="color" id="plane1Color" value="#5ec8ff">
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="color-field">
+                <label class="form-label" for="overlapColor">Overlap</label>
+                <input type="color" id="overlapColor" value="#ff5050">
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="color-field">
+                <label class="form-label" for="btnClear">Clear</label>
+                <button type="button" class="btn btn-sm btn-outline-light w-100" id="btnClear">Clear screen</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row row-cols-4 g-2 justify-content-center">
-          <!-- Row 4 -->
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="keyA">A</button>
+
+        <div class="panel">
+          <h2>Audio</h2>
+          <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="muteCheckbox">
+                <label class="form-check-label" for="muteCheckbox">Mute</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="volumeSlider">Volume</label>
+              <input type="range" class="form-range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3">
+            </div>
+            <div class="col-md-3">
+              <div class="legend mono" id="pitchView">pitch: 40 (4000 Hz)</div>
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+              <button type="button" class="btn btn-sm btn-outline-light" id="btnEnableSound" title="enableSound()">On</button>
+              <button type="button" class="btn btn-sm btn-outline-light" id="btnDisableSound" title="disableSound()">Off</button>
+            </div>
           </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="key0">0</button>
+        </div>
+
+        <div class="panel">
+          <h2>Keypad</h2>
+          <p class="legend mb-2">Physical: <code>1 2 3 4 / Q W E R / A S D F / Z X C V</code></p>
+          <div id="keypad">
+            <div class="row row-cols-4 g-2 justify-content-center text-center mb-2">
+              <div class="col"><button class="btn btn-outline-light" id="key1">1</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="key2">2</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="key3">3</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="keyC">C</button></div>
+            </div>
+            <div class="row row-cols-4 g-2 justify-content-center text-center mb-2">
+              <div class="col"><button class="btn btn-outline-light" id="key4">4</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="key5">5</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="key6">6</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="keyD">D</button></div>
+            </div>
+            <div class="row row-cols-4 g-2 justify-content-center text-center mb-2">
+              <div class="col"><button class="btn btn-outline-light" id="key7">7</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="key8">8</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="key9">9</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="keyE">E</button></div>
+            </div>
+            <div class="row row-cols-4 g-2 justify-content-center text-center">
+              <div class="col"><button class="btn btn-outline-light" id="keyA">A</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="key0">0</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="keyB">B</button></div>
+              <div class="col"><button class="btn btn-outline-light" id="keyF">F</button></div>
+            </div>
           </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="keyB">B</button>
+          <div class="mono mt-3" id="keysView">keys: 0000 0000 0000 0000</div>
+        </div>
+      </div>
+
+      <!-- Right: debugger -->
+      <div class="col-lg-5">
+        <div class="panel">
+          <h2>Registers</h2>
+          <div id="registerView" class="mono">—</div>
+        </div>
+        <div class="panel">
+          <h2>Current instruction</h2>
+          <div id="opcodeView" class="mono">PC: —</div>
+          <div id="disasmView" class="mono mt-1">—</div>
+        </div>
+        <div class="panel">
+          <h2>Stack</h2>
+          <div id="stackView" class="mono">—</div>
+        </div>
+        <div class="panel">
+          <h2>Memory</h2>
+          <div class="d-flex gap-2 mb-2 align-items-end">
+            <div class="flex-grow-1">
+              <label class="form-label" for="memBase">Base address (hex)</label>
+              <input type="text" class="form-control form-control-sm mono" id="memBase" value="200">
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-light" id="btnMemPc">Follow PC</button>
           </div>
-          <div class="col-md-1 col-sm-2">
-            <button class="btn btn-dark m-2 p-4" id="keyF">F</button>
-          </div>
+          <div id="memoryView" class="mono">—</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
   <script type="module" src="/src/example.ts"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
-
 </body>
 
 </html>

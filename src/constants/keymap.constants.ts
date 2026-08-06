@@ -1,41 +1,52 @@
-//Number of keys on keypad
+/** Number of keys on the Chip-8 hex keypad */
 export const NUMBER_OF_KEYS = 16;
 
-//Keymap of the keyboard
-export const KEYMAP = {
-    49: 0x1, // 1
-    50: 0x2, // 2
-    51: 0x3, // 3
-    52: 0xc, // 4
-    81: 0x4, // Q
-    87: 0x5, // W
-    69: 0x6, // E
-    82: 0xD, // R
-    65: 0x7, // A
-    83: 0x8, // S
-    68: 0x9, // D
-    70: 0xE, // F
-    90: 0xA, // Z
-    88: 0x0, // X
-    67: 0xB, // C
-    86: 0xF  // V
-}
+/**
+ * Maps KeyboardEvent.code → Chip-8 key index (0–15).
+ * Layout mirrors the classic hex pad on a QWERTY keyboard:
+ *
+ *   1 2 3 4      →  1 2 3 C
+ *   Q W E R      →  4 5 6 D
+ *   A S D F      →  7 8 9 E
+ *   Z X C V      →  A 0 B F
+ */
+export const KEYMAP: Record<string, number> = {
+  Digit1: 0x1,
+  Digit2: 0x2,
+  Digit3: 0x3,
+  Digit4: 0xc,
+  KeyQ: 0x4,
+  KeyW: 0x5,
+  KeyE: 0x6,
+  KeyR: 0xd,
+  KeyA: 0x7,
+  KeyS: 0x8,
+  KeyD: 0x9,
+  KeyF: 0xe,
+  KeyZ: 0xa,
+  KeyX: 0x0,
+  KeyC: 0xb,
+  KeyV: 0xf,
+};
 
-export const DigitalKeyMapping = {
-    'key1': 49, 
-    'key2': 50, 
-    'key3': 51, 
-    'keyC': 52,
-    'key4': 81, 
-    'key5': 87, 
-    'key6': 69, 
-    'keyD': 82,
-    'key7': 65, 
-    'key8': 83, 
-    'key9': 68, 
-    'keyE': 70,
-    'keyA': 90, 
-    'key0': 88, 
-    'keyB': 67, 
-    'keyF': 86
+/**
+ * Maps virtual keypad button element IDs → Chip-8 key index (0–15).
+ */
+export const DigitalKeyMapping: Record<string, number> = {
+  key1: 0x1,
+  key2: 0x2,
+  key3: 0x3,
+  keyC: 0xc,
+  key4: 0x4,
+  key5: 0x5,
+  key6: 0x6,
+  keyD: 0xd,
+  key7: 0x7,
+  key8: 0x8,
+  key9: 0x9,
+  keyE: 0xe,
+  keyA: 0xa,
+  key0: 0x0,
+  keyB: 0xb,
+  keyF: 0xf,
 };

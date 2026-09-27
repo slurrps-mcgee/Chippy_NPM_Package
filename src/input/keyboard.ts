@@ -1,4 +1,4 @@
-import { DigitalKeyMapping, KEYMAP, NUMBER_OF_KEYS } from "@/constants/keymap.constants";
+import { DigitalKeyMapping, KEYMAP, NUMBER_OF_KEYS } from '@/constants/keymap.constants';
 
 export class Keyboard {
   /** Array of pressed Chip-8 keys (index 0–15) */
@@ -10,8 +10,8 @@ export class Keyboard {
   public readonly DigitalKeyMapping = DigitalKeyMapping;
 
   constructor() {
-    window.addEventListener("keydown", (event) => this.onKeyDown(event));
-    window.addEventListener("keyup", (event) => this.onKeyUp(event));
+    window.addEventListener('keydown', (event) => this.onKeyDown(event));
+    window.addEventListener('keyup', (event) => this.onKeyUp(event));
   }
 
   /** Checks if a Chip-8 key is pressed */
@@ -45,10 +45,10 @@ export class Keyboard {
    * Manually press/release a Chip-8 key (0–15).
    * Used by the virtual on-screen keypad.
    */
-  public triggerKeyEvent(chip8Key: number, eventType: "keydown" | "keyup" | string) {
+  public triggerKeyEvent(chip8Key: number, eventType: 'keydown' | 'keyup' | string) {
     if (chip8Key < 0 || chip8Key >= NUMBER_OF_KEYS) return;
 
-    if (eventType === "keydown") {
+    if (eventType === 'keydown') {
       this.keyPressed[chip8Key] = true;
       if (this.onNextKeyPress) {
         this.onNextKeyPress(chip8Key);

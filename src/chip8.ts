@@ -1,12 +1,12 @@
-import { CPU } from "@/cpu/cpu";
-import { Display } from "@/display/display";
-import { Memory } from "@/memory/memory";
-import { Audio } from "@/audio/audio";
-import { Keyboard } from "@/input/keyboard";
-import { CHIP8_SPEED, CHIP8_TIMER_HZ } from "@/constants/cpu.constants";
-import type { ExecutionContext } from "@/cpu/operations/executionContext";
-import type { Registers } from "@/cpu/registers/registers";
-import type { DisassembleResult } from "@/cpu/disassembler/disassembler";
+import { CPU } from '@/cpu/cpu';
+import { Display } from '@/display/display';
+import { Memory } from '@/memory/memory';
+import { Audio } from '@/audio/audio';
+import { Keyboard } from '@/input/keyboard';
+import { CHIP8_SPEED, CHIP8_TIMER_HZ } from '@/constants/cpu.constants';
+import type { ExecutionContext } from '@/cpu/operations/executionContext';
+import type { Registers } from '@/cpu/registers/registers';
+import type { DisassembleResult } from '@/cpu/disassembler/disassembler';
 
 export type FrameFinishedCallback = (
   frameBuffer: ImageData,

@@ -1,6 +1,6 @@
 // cpu/registers.ts
-import {NUMBER_OF_REGISTERS, STACK_DEEP } from "@/constants/registers.constants";
-import { LOAD_PROGRAM_ADDRESS } from "@/constants/memory.constants";
+import { NUMBER_OF_REGISTERS, STACK_DEEP } from '@/constants/registers.constants';
+import { LOAD_PROGRAM_ADDRESS } from '@/constants/memory.constants';
 
 export class Registers {
   // General-purpose registers V0-VF
@@ -45,7 +45,7 @@ export class Registers {
   /** Push value onto stack */
   public stackPush(value: number): void {
     if (this.SP >= STACK_DEEP - 1) {
-      throw new Error("Stack Overflow: Attempted to push beyond stack depth.");
+      throw new Error('Stack Overflow: Attempted to push beyond stack depth.');
     }
     this.SP++;
     this.stack[this.SP] = value;
@@ -54,7 +54,7 @@ export class Registers {
   /** Pop value from stack */
   public stackPop(): number {
     if (this.SP < 0) {
-      throw new Error("Stack Underflow: Attempted to pop from an empty stack.");
+      throw new Error('Stack Underflow: Attempted to pop from an empty stack.');
     }
     const value = this.stack[this.SP];
     this.SP--;

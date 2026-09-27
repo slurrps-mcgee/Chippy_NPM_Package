@@ -3,8 +3,8 @@ import {
   DISPLAY_HIRES_WIDTH,
   DISPLAY_LORES_HEIGHT,
   DISPLAY_LORES_WIDTH,
-} from "@/constants/display.constants";
-import { SCHIP_SPRITE_WIDTH, SPRITE_WIDTH } from "@/constants/sprite.constants";
+} from '@/constants/display.constants';
+import { SCHIP_SPRITE_WIDTH, SPRITE_WIDTH } from '@/constants/sprite.constants';
 
 export class EnhancedImageData extends ImageData {
   setPixel(x: number, y: number, red: number, green: number, blue: number, alpha: number = 255) {
@@ -115,19 +115,19 @@ export class Display {
   }
 
   public scrollDown(n: number) {
-    this.scrollVertical(n, "down");
+    this.scrollVertical(n, 'down');
   }
 
   public scrollUp(n: number) {
-    this.scrollVertical(n, "up");
+    this.scrollVertical(n, 'up');
   }
 
   public scrollRight(pixels: number) {
-    this.scrollHorizontal(pixels, "right");
+    this.scrollHorizontal(pixels, 'right');
   }
 
   public scrollLeft(pixels: number) {
-    this.scrollHorizontal(pixels, "left");
+    this.scrollHorizontal(pixels, 'left');
   }
 
   /** @deprecated Prefer setPlane0Color — maps to plane 1 (legacy “foreground”) */
@@ -174,7 +174,9 @@ export class Display {
     let byteOffset = 0;
 
     const drawOne = (plane: Uint8Array) => {
-      const result = this.drawOntoPlane(plane, x, y, rows, bitWidth, (row) => rowBits(row, byteOffset));
+      const result = this.drawOntoPlane(plane, x, y, rows, bitWidth, (row) =>
+        rowBits(row, byteOffset)
+      );
       collision = collision || result.collision;
       collisionRows = Math.max(collisionRows, result.collisionRows);
       byteOffset += bytesPerPlane;
@@ -252,14 +254,14 @@ export class Display {
     if (this.planeMask & 0b10) fn(this.plane1);
   }
 
-  private scrollVertical(n: number, dir: "up" | "down") {
+  private scrollVertical(n: number, dir: 'up' | 'down') {
     if (n <= 0) return;
     const w = this.width;
     const h = this.height;
     const amount = Math.min(n, h);
 
     this.forSelectedPlanes((plane) => {
-      if (dir === "down") {
+      if (dir === 'down') {
         plane.copyWithin(amount * w, 0, (h - amount) * w);
         plane.fill(0, 0, amount * w);
       } else {
@@ -270,7 +272,7 @@ export class Display {
     this.rebuildFrameBuffer();
   }
 
-  private scrollHorizontal(pixels: number, dir: "left" | "right") {
+  private scrollHorizontal(pixels: number, dir: 'left' | 'right') {
     if (pixels <= 0) return;
     const w = this.width;
     const h = this.height;
@@ -280,7 +282,7 @@ export class Display {
       const next = new Uint8Array(plane.length);
       for (let y = 0; y < h; y++) {
         const row = y * w;
-        if (dir === "right") {
+        if (dir === 'right') {
           next.set(plane.subarray(row, row + w - amount), row + amount);
         } else {
           next.set(plane.subarray(row + amount, row + w), row);
@@ -327,13 +329,13 @@ export class Display {
   }
 
   private parseColor(color: string | ColorRGB): ColorRGB {
-    if (typeof color === "string") {
-      let hex = color.replace(/^#/, "");
+    if (typeof color === 'string') {
+      let hex = color.replace(/^#/, '');
       if (hex.length === 3) {
         hex = hex
-          .split("")
+          .split('')
           .map((c) => c + c)
-          .join("");
+          .join('');
       }
       const num = parseInt(hex, 16);
       return [(num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff];

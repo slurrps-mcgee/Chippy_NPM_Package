@@ -1,10 +1,10 @@
-import { LOAD_PROGRAM_ADDRESS, MEMORY_SIZE } from "@/constants/memory.constants";
+import { LOAD_PROGRAM_ADDRESS, MEMORY_SIZE } from '@/constants/memory.constants';
 import {
   LARGE_SPRITE_SET_ADDRESS,
   LARGE_SPRITES,
   SPRITE_SET_ADDRESS,
   SPRITES,
-} from "@/constants/sprite.constants";
+} from '@/constants/sprite.constants';
 
 export class Memory {
   private memory = new Uint8Array(MEMORY_SIZE);
@@ -50,7 +50,7 @@ export class Memory {
 
   public loadROM(buffer: Uint8Array): void {
     if (buffer.length + LOAD_PROGRAM_ADDRESS > MEMORY_SIZE) {
-      throw new Error("ROM size exceeds memory capacity");
+      throw new Error('ROM size exceeds memory capacity');
     }
 
     this.reset();

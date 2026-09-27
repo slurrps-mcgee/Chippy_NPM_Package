@@ -1,5 +1,3 @@
-
-
 //Constants
 const MASK_NNN = { mask: 0x0fff }; //NNN
 const MASK_N = { mask: 0x000f }; //Nibble
@@ -11,7 +9,6 @@ const MASK_HIGHEST_AND_LOWEST_BYTE = 0xf00f; //High and Low byte
 
 //Instruction Set Array
 export const INSTRUCTION_SET = [
-
   //Clear the display.
   {
     key: 2,
@@ -54,7 +51,7 @@ export const INSTRUCTION_SET = [
     pattern: 0x2000,
     arguments: [MASK_NNN],
   },
-  
+
   //Skip next instruction if Vx = kk.
   //The interpreter compares register Vx to kk, and if they are equal, increments the program counter by 2.
   {
@@ -122,7 +119,7 @@ export const INSTRUCTION_SET = [
   },
 
   //Set Vx = Vx OR Vy.
-  //Performs a bitwise OR on the values of Vx and Vy, then stores the result in Vx. A bitwise OR compares 
+  //Performs a bitwise OR on the values of Vx and Vy, then stores the result in Vx. A bitwise OR compares
   //the corrseponding bits from two values, and if either bit is 1, then the same bit in the result is also 1. Otherwise, it is 0.
   {
     key: 12,
@@ -134,7 +131,7 @@ export const INSTRUCTION_SET = [
   },
 
   //Set Vx = Vx AND Vy.
-  //Performs a bitwise AND on the values of Vx and Vy, then stores the result in Vx. A bitwise AND compares the corrseponding 
+  //Performs a bitwise AND on the values of Vx and Vy, then stores the result in Vx. A bitwise AND compares the corrseponding
   //bits from two values, and if both bits are 1, then the same bit in the result is also 1. Otherwise, it is 0.
   {
     key: 13,
@@ -146,7 +143,7 @@ export const INSTRUCTION_SET = [
   },
 
   //Set Vx = Vx XOR Vy.
-  //Performs a bitwise exclusive OR on the values of Vx and Vy, then stores the result in Vx. An exclusive OR compares the 
+  //Performs a bitwise exclusive OR on the values of Vx and Vy, then stores the result in Vx. An exclusive OR compares the
   //corrseponding bits from two values, and if the bits are not both the same, then the corresponding bit in the result is set to 1. Otherwise, it is 0.
   {
     key: 14,
@@ -247,7 +244,7 @@ export const INSTRUCTION_SET = [
   },
 
   //Set Vx = random byte AND kk.
-  //The interpreter generates a random number from 0 to 255, which is then ANDed with the value kk. 
+  //The interpreter generates a random number from 0 to 255, which is then ANDed with the value kk.
   //The results are stored in Vx. See instruction 8xy2 for more information on AND.
   {
     key: 23,
@@ -259,10 +256,10 @@ export const INSTRUCTION_SET = [
   },
 
   //Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
-  //The interpreter reads n bytes from memory, starting at the address stored in I. These bytes are then displayed 
-  //as sprites on screen at coordinates (Vx, Vy). Sprites are XORed onto the existing screen. If this causes any pixels 
-  //to be erased, VF is set to 1, otherwise it is set to 0. If the sprite is positioned so part of it is outside the coordinates 
-  //of the display, it wraps around to the opposite side of the screen. See instruction 8xy3 for more information on XOR, and section 
+  //The interpreter reads n bytes from memory, starting at the address stored in I. These bytes are then displayed
+  //as sprites on screen at coordinates (Vx, Vy). Sprites are XORed onto the existing screen. If this causes any pixels
+  //to be erased, VF is set to 1, otherwise it is set to 0. If the sprite is positioned so part of it is outside the coordinates
+  //of the display, it wraps around to the opposite side of the screen. See instruction 8xy3 for more information on XOR, and section
   //2.4, Display, for more information on the Chip-8 screen and sprites.
   {
     key: 24,
@@ -351,7 +348,7 @@ export const INSTRUCTION_SET = [
   },
 
   //Set I = location of sprite for digit Vx.
-  //The value of I is set to the location for the hexadecimal sprite corresponding to the value 
+  //The value of I is set to the location for the hexadecimal sprite corresponding to the value
   //of Vx. See section 2.4, Display, for more information on the Chip-8 hexadecimal font.
   {
     key: 32,
@@ -363,7 +360,7 @@ export const INSTRUCTION_SET = [
   },
 
   //Store BCD representation of Vx in memory locations I, I+1, and I+2.
-  //The interpreter takes the decimal value of Vx, and places the hundreds digit in memory at 
+  //The interpreter takes the decimal value of Vx, and places the hundreds digit in memory at
   //location in I, the tens digit at location I+1, and the ones digit at location I+2.
   {
     key: 33,

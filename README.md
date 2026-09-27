@@ -15,23 +15,23 @@ Requires a modern browser (ES modules, `requestAnimationFrame`, Web Audio API, C
 ## Quick start
 
 ```ts
-import { Chip8 } from "@slurrps/chippy";
+import { Chip8 } from '@slurrps/chippy';
 
 const chip8 = new Chip8();
-const canvas = document.querySelector("canvas")!;
-const ctx = canvas.getContext("2d")!;
-canvas.width = chip8.display.width;   // 64
+const canvas = document.querySelector('canvas')!;
+const ctx = canvas.getContext('2d')!;
+canvas.width = chip8.display.width; // 64
 canvas.height = chip8.display.height; // 32
 
-chip8.display.setBackgroundColor("#282828");
-chip8.display.setForegroundColor("#FFB000");
+chip8.display.setBackgroundColor('#282828');
+chip8.display.setForegroundColor('#FFB000');
 
 chip8.onFrameFinished((frameBuffer, fps, registers) => {
   ctx.putImageData(frameBuffer, 0, 0);
   // fps / registers available for debug UI
 });
 
-const rom = new Uint8Array(await (await fetch("/roms/pong.ch8")).arrayBuffer());
+const rom = new Uint8Array(await (await fetch('/roms/pong.ch8')).arrayBuffer());
 chip8.loadRom(rom);
 await chip8.speaker.enableSound(); // call after a user gesture
 chip8.run();
@@ -74,22 +74,22 @@ The demo also provides an on-screen keypad (mouse / touch) that drives the same 
 
 ### `Chip8`
 
-| Method / property | Description |
-|---|---|
-| `new Chip8()` | Construct CPU, memory, display, keyboard, speaker |
-| `loadRom(Uint8Array)` | Reset memory/CPU/display and load a ROM at `0x200` |
-| `run()` | Start the `requestAnimationFrame` loop |
-| `pause()` / `resume()` | Halt / continue instruction execution |
-| `stop()` | Cancel the animation loop |
-| `step()` | Execute one instruction (handy while paused) |
-| `reset()` | Soft reset and reload the last ROM |
-| `onFrameFinished(cb)` | `(frameBuffer, fps, registers) => void` each display frame |
-| `getMemory()` | Per-instance 64 KB `Memory` |
-| `disassemble(opcode)` | `{ instruction, args }` for a 16-bit opcode |
-| `setTargetIps(n)` / `getTargetIps()` | Target instructions/sec (default **700**) |
-| `setCyclesPerFrame(n)` / `getCyclesPerFrame()` | Convenience around IPS ÷ 60 |
-| `getFps()` / `isRunning()` / `isPaused()` | Loop status |
-| `cpu` / `display` / `keyboard` / `speaker` | Subsystems |
+| Method / property                              | Description                                                |
+| ---------------------------------------------- | ---------------------------------------------------------- |
+| `new Chip8()`                                  | Construct CPU, memory, display, keyboard, speaker          |
+| `loadRom(Uint8Array)`                          | Reset memory/CPU/display and load a ROM at `0x200`         |
+| `run()`                                        | Start the `requestAnimationFrame` loop                     |
+| `pause()` / `resume()`                         | Halt / continue instruction execution                      |
+| `stop()`                                       | Cancel the animation loop                                  |
+| `step()`                                       | Execute one instruction (handy while paused)               |
+| `reset()`                                      | Soft reset and reload the last ROM                         |
+| `onFrameFinished(cb)`                          | `(frameBuffer, fps, registers) => void` each display frame |
+| `getMemory()`                                  | Per-instance 64 KB `Memory`                                |
+| `disassemble(opcode)`                          | `{ instruction, args }` for a 16-bit opcode                |
+| `setTargetIps(n)` / `getTargetIps()`           | Target instructions/sec (default **700**)                  |
+| `setCyclesPerFrame(n)` / `getCyclesPerFrame()` | Convenience around IPS ÷ 60                                |
+| `getFps()` / `isRunning()` / `isPaused()`      | Loop status                                                |
+| `cpu` / `display` / `keyboard` / `speaker`     | Subsystems                                                 |
 
 ### Display
 
@@ -146,16 +146,16 @@ CPU opcodes talk to hardware only through an internal `ExecutionContext` (`drawS
 
 **XO-CHIP** — also implemented:
 
-| Opcode | Name | Behavior |
-|---|---|---|
-| `00DN` | SCU | Scroll up N pixels (N/2 in low-res) |
-| `5XY2` | LD [I], Vx..Vy | Store register range at `I` (no `I` increment; order follows x→y) |
-| `5XY3` | LD Vx..Vy, [I] | Load register range from `I` (no `I` increment) |
-| `F000 NNNN` | LD I, long | Double-wide load of 16-bit immediate into `I` |
-| `FN01` | PLANE n | Select drawing planes by bitmask (0–3) |
-| `F002` | AUDIO | Copy 16 bytes from `I` into the pattern buffer |
-| `FX3A` | LD pitch, Vx | Set pattern playback pitch |
-| `FN75` / `FN85` | flags | Save/load `V0..Vn` to 16 flag registers (generalized SCHIP) |
+| Opcode          | Name           | Behavior                                                          |
+| --------------- | -------------- | ----------------------------------------------------------------- |
+| `00DN`          | SCU            | Scroll up N pixels (N/2 in low-res)                               |
+| `5XY2`          | LD [I], Vx..Vy | Store register range at `I` (no `I` increment; order follows x→y) |
+| `5XY3`          | LD Vx..Vy, [I] | Load register range from `I` (no `I` increment)                   |
+| `F000 NNNN`     | LD I, long     | Double-wide load of 16-bit immediate into `I`                     |
+| `FN01`          | PLANE n        | Select drawing planes by bitmask (0–3)                            |
+| `F002`          | AUDIO          | Copy 16 bytes from `I` into the pattern buffer                    |
+| `FX3A`          | LD pitch, Vx   | Set pattern playback pitch                                        |
+| `FN75` / `FN85` | flags          | Save/load `V0..Vn` to 16 flag registers (generalized SCHIP)       |
 
 Skip instructions (`3x`/`4x`/`5xy0`/`9xy0`/`Ex9E`/`ExA1`) skip **4** bytes when the following opcode is `F000`, so XO programs can detect support.
 
@@ -192,28 +192,30 @@ npm run typecheck   # tsc --noEmit
 
 Published package contents are limited to `dist/chip8.js`, `dist/chip8.d.ts`, `README.md`, and `LICENSE` (see the `files` field in `package.json`).
 
-**GitHub Pages:** `.github/workflows/pages.yml` deploys `dist-demo` on every push to `main` (and via `workflow_dispatch`). In the repo settings, set **Pages → Source** to **GitHub Actions** once.
+**CI:** `.github/workflows/ci.yml` runs Prettier (`npm run format:check`) plus `npm run verify` on every branch push and on pull requests into `main`. Mark **CI / Check** as a required status check in branch protection so it must pass before merge.
 
-CI npm publish remains the manual `workflow_dispatch` workflow under `.github/workflows/npm.yml`.
+**GitHub Pages:** `.github/workflows/pages.yml` deploys `dist-demo` only after a push to `main`. In the repo settings, set **Pages → Source** to **GitHub Actions** once.
+
+**npm:** `.github/workflows/npm.yml` publishes with [Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC) only after a push to `main`. If that `package.json` version is already on npm, publish is skipped. Configure the package on npmjs as a trusted publisher for this repo and workflow.
 
 ## Optimization roadmap (done / next)
 
-| Item | Status |
-|---|---|
-| Fix CLS (`clearScreen` in context) | Done |
-| 60 Hz timers (not per-instruction) | Done |
-| Time-based IPS scheduling (~700 IPS) | Done |
-| Per-instance memory (no singleton) | Done |
-| Boolean display grid + ImageData rebuild | Done |
-| Audio oscillator reuse / gain gate | Done |
-| Disassembler high-nibble jump groups | Done |
-| FX0A on keydown + `event.code` keymap | Done |
-| Public pause / stop / step / speed API | Done |
-| Ship clean `.d.ts` without `@/` aliases | Done |
-| SuperChip / SCHIP opcodes | Done |
-| XO-CHIP (planes, 64KB, pattern audio, F000) | Done |
-| Automated opcode / timer regression tests | Future |
-| Optional demo deploy (GitHub Pages) | Done (`.github/workflows/pages.yml`) |
+| Item                                        | Status                               |
+| ------------------------------------------- | ------------------------------------ |
+| Fix CLS (`clearScreen` in context)          | Done                                 |
+| 60 Hz timers (not per-instruction)          | Done                                 |
+| Time-based IPS scheduling (~700 IPS)        | Done                                 |
+| Per-instance memory (no singleton)          | Done                                 |
+| Boolean display grid + ImageData rebuild    | Done                                 |
+| Audio oscillator reuse / gain gate          | Done                                 |
+| Disassembler high-nibble jump groups        | Done                                 |
+| FX0A on keydown + `event.code` keymap       | Done                                 |
+| Public pause / stop / step / speed API      | Done                                 |
+| Ship clean `.d.ts` without `@/` aliases     | Done                                 |
+| SuperChip / SCHIP opcodes                   | Done                                 |
+| XO-CHIP (planes, 64KB, pattern audio, F000) | Done                                 |
+| Automated opcode / timer regression tests   | Future                               |
+| Optional demo deploy (GitHub Pages)         | Done (`.github/workflows/pages.yml`) |
 
 ## License
 

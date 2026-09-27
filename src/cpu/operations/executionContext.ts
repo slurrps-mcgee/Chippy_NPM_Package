@@ -1,6 +1,6 @@
-import type { Registers } from "@/cpu/registers/registers";
-import type { Memory } from "@/memory/memory";
-import type { DrawSpriteResult } from "@/display/display";
+import type { Registers } from '@/cpu/registers/registers';
+import type { Memory } from '@/memory/memory';
+import type { DrawSpriteResult } from '@/display/display';
 
 /**
  * ExecutionContext — CHIP-8 / SUPER-CHIP / XO-CHIP hardware bridge.

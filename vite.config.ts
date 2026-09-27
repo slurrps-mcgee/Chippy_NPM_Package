@@ -1,16 +1,16 @@
-import { defineConfig } from "vite";
-import path from "path";
+import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig({
   // Relative base works for local preview and GitHub Pages project sites
-  base: "./",
+  base: './',
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
   build: {
-    outDir: "dist-demo",
+    outDir: 'dist-demo',
     emptyOutDir: true,
   },
 });

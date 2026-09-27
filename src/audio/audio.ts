@@ -70,7 +70,7 @@ export class Audio {
   }
 
   private async ensureAudioContext(): Promise<void> {
-    if (this.audioContext && this.audioContext.state === "suspended") {
+    if (this.audioContext && this.audioContext.state === 'suspended') {
       await this.audioContext.resume();
     }
   }

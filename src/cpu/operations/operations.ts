@@ -1,5 +1,5 @@
-import type { ExecutionContext } from "@/cpu/operations/executionContext";
-import { LARGE_SPRITE_SET_ADDRESS, SPRITE_SET_ADDRESS } from "@/constants/sprite.constants";
+import type { ExecutionContext } from '@/cpu/operations/executionContext';
+import { LARGE_SPRITE_SET_ADDRESS, SPRITE_SET_ADDRESS } from '@/constants/sprite.constants';
 
 type Operation = (ctx: ExecutionContext, args: number[], opcode: number) => void;
 
@@ -168,8 +168,7 @@ export const OPERATIONS: Record<string, Operation> = {
     const height = opcode & 0xf;
     const vx = ctx.registers.V[x];
     const vy = ctx.registers.V[y];
-    const planeCount =
-      (ctx.getPlaneMask() & 0b01 ? 1 : 0) + (ctx.getPlaneMask() & 0b10 ? 1 : 0);
+    const planeCount = (ctx.getPlaneMask() & 0b01 ? 1 : 0) + (ctx.getPlaneMask() & 0b10 ? 1 : 0);
     const planes = Math.max(planeCount, 1);
 
     let result;

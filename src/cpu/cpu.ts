@@ -1,7 +1,7 @@
-import { Registers } from "@/cpu/registers/registers";
-import { Disassembler } from "@/cpu/disassembler/disassembler";
-import { OPERATIONS } from "@/cpu/operations/operations";
-import type { ExecutionContext } from "@/cpu/operations/executionContext";
+import { Registers } from '@/cpu/registers/registers';
+import { Disassembler } from '@/cpu/disassembler/disassembler';
+import { OPERATIONS } from '@/cpu/operations/operations';
+import type { ExecutionContext } from '@/cpu/operations/executionContext';
 
 export class CPU {
   registers = new Registers();

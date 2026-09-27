@@ -1,4 +1,4 @@
-import { INSTRUCTION_SET } from "@/constants/instructions.constants";
+import { INSTRUCTION_SET } from '@/constants/instructions.constants';
 
 export type InstructionDef = (typeof INSTRUCTION_SET)[number];
 
@@ -58,9 +58,7 @@ export class Disassembler {
       return { instruction: null, args: [] };
     }
 
-    const instruction = candidates.find(
-      (instr) => (opcode & Number(instr.mask)) === instr.pattern
-    );
+    const instruction = candidates.find((instr) => (opcode & Number(instr.mask)) === instr.pattern);
 
     if (!instruction) {
       return { instruction: null, args: [] };
